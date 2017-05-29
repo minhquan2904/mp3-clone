@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.example.minhquan.a14110162mp3.Activity.HomeActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.NoActionBar.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorDeepPurple"
+            app:popupTheme="@style/AppTheme.NoActionBar.PopupOverlay"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+
+                <RadioGroup
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
+                    <RadioButton
+                        android:id="@+id/btn_local"
+                        android:layout_width="48dp"
+                        android:layout_height="24dp"
+                        android:button="@null"
+                        android:background="@drawable/bg_button_appbar_left"
+                        android:text="Local"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@drawable/color_text_appbar"/>
+                    <RadioButton
+                        android:id="@+id/btn_online"
+                        android:layout_width="48dp"
+                        android:layout_height="24dp"
+                        android:button="@null"
+                        android:background="@drawable/bg_button_appbar_right"
+                        android:text="Online"
+                        android:textSize="12sp"
+                        android:textAlignment="center"
+                        android:textColor="@drawable/color_text_appbar"/>
+                </RadioGroup>
+
+
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
+
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="55dp">
+    </android.support.v4.view.ViewPager>
+
+</android.support.design.widget.CoordinatorLayout>
