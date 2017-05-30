@@ -5,20 +5,61 @@
     tools:context="com.example.minhquan.a14110162mp3.Activity.Fragment.FragmentLocal">
 
     <LinearLayout
-        android:id="@+id/lnNull"
-        android:orientation="horizontal"
+        android:layout_below="@+id/lnLogin"
+        android:id="@+id/lnOnlineMusic"
         android:layout_width="match_parent"
-        android:layout_height="50dp"></LinearLayout>
-    <LinearLayout
-        android:layout_below="@+id/lnNull"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ListView
-            android:id="@+id/song_list"
-            android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:text="ALL MUSIC"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textColor="@color/textColorMain"
+            />
+        <LinearLayout
+            android:id="@+id/lnDownload"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             >
-        </ListView>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_download"
+                />
+            <TextView
+                android:paddingLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Download"
+                android:textSize="18dp"
+                android:textColor="@color/colorBlack"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnMusic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_all"
+                />
+            <TextView
+                android:paddingLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your music"
+                android:textSize="18dp"
+                android:textColor="@color/colorBlack"
+                />
+        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

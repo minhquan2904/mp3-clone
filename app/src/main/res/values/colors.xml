@@ -9,4 +9,5 @@
     <color name="colorGrey">#ECEFF1</color>
     <color name="textColorMain">#606060</color>
     <color name="colorPurple">#9C27B0</color>
+    <color name="colorLightBlue">#03A9F4</color>
 </resources>

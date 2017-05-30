@@ -1,8 +1,7 @@
 package com.example.minhquan.a14110162mp3.Activity;
 
-import android.media.AudioManager;
-import android.media.MediaMetadata;
-import android.media.MediaPlayer;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -12,53 +11,55 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.minhquan.a14110162mp3.Database.DownloadTask;
+import com.example.minhquan.a14110162mp3.Model.OnlineSong;
 import com.example.minhquan.a14110162mp3.Model.Song;
 import com.example.minhquan.a14110162mp3.R;
+import com.example.minhquan.a14110162mp3.Singleton.MediaPlayerStatic;
+import com.example.minhquan.a14110162mp3.Static.OnlineMP;
+import com.squareup.picasso.Picasso;
 
-import com.example.minhquan.a14110162mp3.Static.LocalMP;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PlaySongActivity extends AppCompatActivity implements View.OnClickListener,SeekBar.OnSeekBarChangeListener {
-    ArrayList<Song> songList;
+public class OnlinePlaySongActivity extends AppCompatActivity implements View.OnClickListener,SeekBar.OnSeekBarChangeListener {
+    ArrayList<OnlineSong> songList;
     Animation anim;
     int position,cur;
     TextView txtTitle,txtArtist,txtTimeTotal,txtTimeSong;
-    Song songToDisplay;
-    LocalMP LocalMP;
-    ImageButton btnPlay,btnPrev,btnNext,btn_shuffle,btn_repeat;
+    OnlineSong songToDisplay;
+    OnlineMP onlineMP;
+    ImageButton btnPlay,btnPrev,btnNext,btn_shuffle,btn_repeat,btn_download;
     ImageView imgDisc;
     Toolbar tbName;
     SeekBar skBar;
+
     public int isUpdate = 1;
     public boolean isRunning,isShuffle = false,isRepeat = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_song);
+        setContentView(R.layout.activity_online_play_song);
 
-        songList = (ArrayList<Song>) getIntent().getSerializableExtra("songList");
+        songList = (ArrayList<OnlineSong>) getIntent().getSerializableExtra("onlineSongs");
         position = (int) getIntent().getSerializableExtra("position");
+        onlineMP = new OnlineMP();
         songToDisplay = songList.get(position);
-        LocalMP.setOnCompletionListener(new LocalMP.OnCompletionListener() {
+        onlineMP.setOnCompletionListener(new OnlineMP.OnCompletionListener() {
             @Override
             public void OnComplete() {
-
                 next();
             }
         });
         init();
         initSong();
-       // LocalMP.setOnCompletionListener(this);
+        // OnlineMP.setOnCompletionListener(this);
         //Set back arrow
         setSupportActionBar(tbName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -80,28 +81,28 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
 
     public void initSong() {
 
-        //LocalMP.reset();
-       // LocalMP.setOnCompletionListener(this);
+        //OnlineMP.reset();
+        // OnlineMP.setOnCompletionListener(this);
         txtTitle.setText(songToDisplay.getTitle());
         txtArtist.setText(songToDisplay.getArtist());
         String path = songToDisplay.getUrl();
         //set bitmap
-        if(songToDisplay.getThumnbail() != null)
+        if(songToDisplay.getAvt() != null)
         {
-            imgDisc.setImageBitmap(songToDisplay.getThumnbail());
+            Picasso.with(this).load(songToDisplay.getAvt()).fit().into(imgDisc);
         }
         else
         {
             imgDisc.setImageResource(R.drawable.ic_launcher);
         }
         //Play music
-        if(LocalMP.checkRunning() == 1)
+        if(onlineMP.checkRunning() == 1)
         {
-            LocalMP.stop();
+            OnlineMP.stop();
         }// is Running another song ==> stop
 
-        LocalMP.modify(path);
-        LocalMP.play();
+        onlineMP.onlineModify(path);
+      //  OnlineMP.play();
 
 
         //set timetotal
@@ -127,7 +128,7 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         }).start();
-        //cur = LocalMP.getTimeCurrent();
+        //cur = OnlineMP.getTimeCurrent();
 
 
     }
@@ -142,6 +143,7 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
         btn_repeat      = (ImageButton) findViewById(R.id.btn_repeat);
         btnNext         = (ImageButton) findViewById(R.id.btnNext);
         btnPrev         = (ImageButton) findViewById(R.id.btnPrev);
+        btn_download    = (ImageButton) findViewById(R.id.btn_download) ;
         tbName          = (Toolbar) findViewById(R.id.tbName);
         skBar           = (SeekBar) findViewById(R.id.skBar);
         imgDisc         = (ImageView) findViewById(R.id.imgDisc);
@@ -151,6 +153,7 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
         btn_repeat.setOnClickListener(this);
         btnNext.setOnClickListener(this);
         btnPrev.setOnClickListener(this);
+        btn_download.setOnClickListener(this);
         skBar.setOnSeekBarChangeListener(this);
 
 
@@ -169,8 +172,8 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
             if(msg.what == 1)
             {
                 SimpleDateFormat formatTime = new SimpleDateFormat("mm:ss");
-                txtTimeSong.setText(formatTime.format(LocalMP.getTimeCurrent()));
-                skBar.setProgress(LocalMP.getTimeCurrent());
+                txtTimeSong.setText(formatTime.format(onlineMP.getTimeCurrent()));
+                skBar.setProgress(onlineMP.getTimeCurrent());
             }
         }
 
@@ -191,8 +194,10 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
     };
     public void setTimeTotal() {
         SimpleDateFormat formatTime = new SimpleDateFormat("mm:ss");
-        txtTimeTotal.setText(formatTime.format(LocalMP.getDuration()));
-        skBar.setMax(LocalMP.getDuration());
+
+        int time = onlineMP.getTimeDuration();
+        txtTimeTotal.setText(formatTime.format(time));
+        skBar.setMax(time);
 
     }
 
@@ -205,16 +210,16 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()){
             // check button
             case R.id.btnPlay:
-                if(LocalMP.checkRunning() == 1) // isRunning ==> pause
+                if(OnlineMP.checkRunning() == 1) // isRunning ==> pause
                 {
                     btnPlay.setImageResource(R.drawable.ic_pause);
-                    LocalMP.pause();
+                    OnlineMP.pause();
                     imgDisc.clearAnimation();
                 }
                 else
                 {
                     btnPlay.setImageResource(R.drawable.ic_play);
-                    LocalMP.play();
+                    OnlineMP.play();
                     imgDisc.setAnimation(anim);
                 }
                 break;
@@ -256,6 +261,9 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btnPrev:
                 previous();
+                break;
+            case R.id.btn_download:
+                DownloadSong();
                 break;
         }
 
@@ -308,9 +316,9 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//        cur = LocalMP.getTimeCurrent();
+//        cur = OnlineMP.getTimeCurrent();
 //        if(cur!= progress && cur!= 0)
-//            LocalMP.seekTo(skBar.getProgress());
+//            OnlineMP.seekTo(skBar.getProgress());
     }
 
     @Override
@@ -321,8 +329,41 @@ public class PlaySongActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
-           LocalMP.seekTo(skBar.getProgress());
+        OnlineMP.seekTo(skBar.getProgress());
     }
 
+    private void DownloadSong()
+    {
+        ProgressDialog mProgressDialog;
 
+        // instantiate it within the onCreate method
+        mProgressDialog = new ProgressDialog(OnlinePlaySongActivity.this);
+        mProgressDialog.setMessage("Downloading song");
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        mProgressDialog.setCancelable(true);
+
+        final DownloadTask downloadTask = new DownloadTask(OnlinePlaySongActivity.this,mProgressDialog,songToDisplay.getTitle());
+
+        downloadTask.execute(songToDisplay.getUrl());
+
+        mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                downloadTask.cancel(true);
+            }
+        });
+
+
+    }
+//    @Override
+//    public void OnEndMusic() {
+////        if(isRepeat)
+////        {
+////            position --;
+////            isRepeat = true;
+////        }
+////        OnlineMP.reset();
+//        next();
+//    }
 }

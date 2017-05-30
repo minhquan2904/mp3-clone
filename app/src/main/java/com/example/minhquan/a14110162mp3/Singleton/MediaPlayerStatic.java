@@ -14,12 +14,12 @@ public class MediaPlayerStatic implements MediaPlayer.OnCompletionListener {
     public static MediaPlayerStatic.OnCompletionListener onCompletionListener;
     public static MediaPlayer mediaPlayer;
     public static String path;
-    public static final int PLAYER_IDLE = -1;
-    public static final int PLAYER_PLAY = 1;
-    public static final int PLAYER_PAUSE = 2;
+    public static final int STOP = -1;
+    public static final int PLAYING = 1;
+    public static final int PAUSE = 2;
 
     public static int check;
-    static boolean checkEnd;
+    protected static boolean checkEnd;
     public static int duration;
 
 
@@ -28,25 +28,7 @@ public class MediaPlayerStatic implements MediaPlayer.OnCompletionListener {
 
     }
 
-    public static void modify(String path)
-    {
-        mediaPlayer = new MediaPlayer();
-        try {
-            check = PLAYER_IDLE;
-            mediaPlayer.setDataSource(path);
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            mediaPlayer.prepare();
-            setDuration(mediaPlayer.getDuration());
-            // duration = mediaPlayer.getDuration();
-            // mediaPlayer.release();
-            mediaPlayer.setOnCompletionListener(MediaPlayerStatic.getInstance());
-            checkEnd = true;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
     public static MediaPlayerStatic getInstance() {
         return ourInstance;
     }
@@ -63,18 +45,18 @@ public class MediaPlayerStatic implements MediaPlayer.OnCompletionListener {
     }
     public static void setRepeat()
     {
-        MediaPlayerStatic.check = PLAYER_IDLE;
+        MediaPlayerStatic.check = STOP;
     }
     public static int checkRunning(){return check;}
     public static  void play() {
-        if (check == PLAYER_IDLE || check == PLAYER_PAUSE) {
-            check = PLAYER_PLAY;
+        if (check == STOP || check == PAUSE) {
+            check = PLAYING;
             mediaPlayer.start();
         }
     }
     public  static  void stop() {
-        if (check == PLAYER_PLAY || check == PLAYER_PAUSE) {
-            check = PLAYER_IDLE;
+        if (check == PLAYING || check == PAUSE) {
+            check = STOP;
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
@@ -82,20 +64,20 @@ public class MediaPlayerStatic implements MediaPlayer.OnCompletionListener {
     }
 
     public static void pause() {
-        if (check == PLAYER_PLAY) {
+        if (check == PLAYING) {
             mediaPlayer.pause();
-            check = PLAYER_PAUSE;
+            check = PAUSE;
         }
     }
 
     public static int getTimeCurrent() {
-        if (check != PLAYER_IDLE) {
+        if (check != STOP) {
             return mediaPlayer.getCurrentPosition() ;
         } else
             return 0;
     }
     public interface OnCompletionListener{
-        void OnEndMusic();
+        void OnComplete();
     }
     public static void seekTo(int time)
     {
@@ -106,11 +88,12 @@ public class MediaPlayerStatic implements MediaPlayer.OnCompletionListener {
         //kết thúc bài hát
         if(checkEnd)
         {
-            onCompletionListener.OnEndMusic();
-           // checkEnd = false;
+            onCompletionListener.OnComplete();
+           //checkEnd = false;
         }
 
     }
+
     public static void setOnCompletionListener(MediaPlayerStatic.OnCompletionListener onCompletionListener){
         MediaPlayerStatic.onCompletionListener = onCompletionListener;
     }

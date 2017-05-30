@@ -1,59 +1,29 @@
-package com.example.minhquan.a14110162mp3.Activity;
+package com.example.minhquan.a14110162mp3.Static;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Picture;
+import android.graphics.drawable.PictureDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.example.minhquan.a14110162mp3.Adapter.SongAdapter;
 import com.example.minhquan.a14110162mp3.Model.Song;
-import com.example.minhquan.a14110162mp3.R;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class LocalSongActivity extends AppCompatActivity {
-    private ArrayList<Song> songList;
-    private ListView songView;
-    private SongAdapter songAdapter;
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_song);
+/**
+ * Created by MinhQuan on 5/30/2017.
+ */
 
-        /*
-        songView = (ListView)findViewById(R.id.song_list);
-        songList = new ArrayList<>();
-        getSongList();
-        songAdapter = new SongAdapter(songList,this,R.layout.item_song);
-
-        songView.setAdapter(songAdapter);
-
-        songView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent myIntent = new Intent(view.getContext(),PlaySongActivity.class);
-                myIntent.putExtra("songList",songList);
-                myIntent.putExtra("position",position);
-                startActivity(myIntent);
-            }
-        });
-
-        */
-    }
-
-    public void getSongList() {
+public class Playlist {
+    public static void getLocalSongList(String type,ArrayList<Song> songListTemp) {
         //Get playlist in SD card
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download";
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + type;
 
         File file = new File(path);
         File[] files = file.listFiles(); // get all file
@@ -86,10 +56,22 @@ public class LocalSongActivity extends AppCompatActivity {
                 }
                 metadataRetriever.release();
                 retriever.release();
-                songList.add(song);
+                songListTemp.add(song);
 
 
             }
         }
     }
+
+
+    //Convert Picture to Bitmap
+    private static Bitmap pictureDrawable2Bitmap(Picture picture) {
+        PictureDrawable pd = new PictureDrawable(picture);
+        Bitmap bitmap = Bitmap.createBitmap(pd.getIntrinsicWidth(), pd.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawPicture(pd.getPicture());
+        return bitmap;
+    }
+
+
 }
