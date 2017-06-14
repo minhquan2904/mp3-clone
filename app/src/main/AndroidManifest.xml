@@ -24,7 +24,8 @@
         <activity android:name=".Activity.LocalDownloadActivity" />
         <activity android:name=".Activity.LocalMusicActivity" />
         <activity android:name=".Activity.OnlineMusicActivity" />
-        <activity android:name=".Activity.OnlinePlaySongActivity"></activity>
+        <activity android:name=".Activity.OnlinePlaySongActivity" />
+        <activity android:name=".Activity.LoginActivity"></activity>
     </application>
 
 </manifest>

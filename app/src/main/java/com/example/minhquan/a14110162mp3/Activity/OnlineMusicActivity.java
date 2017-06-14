@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.minhquan.a14110162mp3.Adapter.OnlineSongAdapter;
 import com.example.minhquan.a14110162mp3.Database.SongWS;
@@ -24,12 +25,20 @@ public class OnlineMusicActivity extends AppCompatActivity implements AbsListVie
     SongWS songWS;
     OnlineSongAdapter onlineSongAdapter;
     int page = 1;
+    TextView txtUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_music);
 
         init();
+
+        String name = (String) getIntent().getSerializableExtra("name");
+        if(name!= null )
+        {
+            txtUser.setText("Hi "+name);
+        }
+
 
         //Set back arrow
         setSupportActionBar(tbName);
@@ -67,6 +76,7 @@ public class OnlineMusicActivity extends AppCompatActivity implements AbsListVie
     private void init() {
         tbName          = (Toolbar) findViewById(R.id.tbName);
         lvOnlineMusic   = (ListView) findViewById(R.id.lvOnlineMusic);
+        txtUser         = (TextView) findViewById(R.id.txtUser);
     }
 
     @Override

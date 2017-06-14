@@ -2,37 +2,23 @@ package com.example.minhquan.a14110162mp3.Activity.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.AudioManager;
-import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
 
+import com.example.minhquan.a14110162mp3.Activity.HomeActivity;
+import com.example.minhquan.a14110162mp3.Activity.LoginActivity;
 import com.example.minhquan.a14110162mp3.Activity.OnlineMusicActivity;
-import com.example.minhquan.a14110162mp3.Activity.PlaySongActivity;
-import com.example.minhquan.a14110162mp3.Adapter.SongAdapter;
-import com.example.minhquan.a14110162mp3.Database.SongWS;
-import com.example.minhquan.a14110162mp3.Database.Webservices;
+import com.example.minhquan.a14110162mp3.Activity.OnlinePlaySongActivity;
 import com.example.minhquan.a14110162mp3.Model.OnlineSong;
-import com.example.minhquan.a14110162mp3.Model.Song;
 import com.example.minhquan.a14110162mp3.R;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 public class FragmentOnline extends Fragment {
@@ -49,6 +35,7 @@ public class FragmentOnline extends Fragment {
     Button btn_demo;
     ArrayList<OnlineSong> onlineSongs;
     LinearLayout lnAllMusic;
+    RelativeLayout lnLogin;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -89,7 +76,14 @@ public class FragmentOnline extends Fragment {
             }
         });
 
-
+        lnLogin = (RelativeLayout) view.findViewById(R.id.lnLogin);
+        lnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(getContext(), LoginActivity.class);
+                startActivity(myIntent);
+            }
+        });
 
 
         return view;

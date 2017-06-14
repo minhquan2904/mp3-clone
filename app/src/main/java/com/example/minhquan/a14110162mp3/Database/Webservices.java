@@ -37,7 +37,7 @@ public class Webservices extends AsyncTask<Void, Void, String> {
 
         // Will contain the raw JSON response as a string.
         String forecastJsonStr = null;
-        path = "http://192.168.137.1:8080/";
+        path = "http://192.168.43.169:8080/";
         try {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at

@@ -45,7 +45,24 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
+        android:padding="5dp"
         android:layout_below="@+id/tbName"
+        android:orientation="horizontal"
+        android:id="@+id/lnName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtUser"
+            android:textSize="22dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hi"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_below="@+id/lnName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ListView
